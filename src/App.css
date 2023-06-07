@@ -46,15 +46,19 @@ th{
 .open__state{
   position: fixed;
   width: 429px;
-  height: 376px;
+  height: 273px;
   border-radius: 28px;
-  background-color: aliceblue;
-  top: 94px;
+  background-color: #e2e2e2;
+  top: 209px;
   left: 35%;
 }
 
 .open__desc{
   text-align: center;
+  position: relative;
+  top: 35px;
+  font-size: 17px;
+  font-weight: 700;
 }
 .open__form{
   display: flex;
@@ -65,4 +69,12 @@ th{
 
 .open__update{
 margin-top: 12px;
+}
+
+.close__tab{
+  z-index: 1000;
+  position: relative;
+  left: 401px;
+  bottom: 47px;
+  cursor: pointer;
 }

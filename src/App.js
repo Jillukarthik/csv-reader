@@ -1,14 +1,16 @@
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 function App() {
   const [file, setFile] = useState();
   const [array, setArray] = useState([]);
+  const [originalArray, setOriginalArray] = useState([]);
   const [inputdata, setInputdata] = useState("");
   const [dialogueBox, setDialogueBox] = useState(false);
   const [LocA, setLocA] = useState("");
   const [LocB, setLocB] = useState("");
-  const[index,setIndex]=useState();
+  const [index, setIndex] = useState();
   const fileReader = new FileReader();
+
 
 
   const handleOnChange = (e) => {
@@ -29,6 +31,7 @@ function App() {
     });
 
     setArray(array);
+    setOriginalArray(array)
   };
 
   const handleOnSubmit = (e) => {
@@ -47,17 +50,15 @@ function App() {
   const headerKeys = Object.keys(Object.assign({}, ...array));
 
   const HandleFilter = () => {
-    let filteredData = array.filter((itm, idx) => {
-      console.log(itm["Part #"].includes(inputdata));
-      return (
-        itm["Part #"]?.includes(inputdata) ||
-        itm["Alt.Part#"]?.includes(inputdata)
-      );
-    });
-    console.log(filteredData);
-    setArray(filteredData);
-    // console.log("triggredFiltrered");
+      let filteredData = array.filter((itm, idx) => {
+        return (
+          itm["Part #"]?.includes(inputdata.toUpperCase()) ||
+          itm["Alt.Part#"]?.includes(inputdata.toUpperCase())
+        );
+      });
+    setArray(filteredData); 
   };
+
 
   const handleDel = (i) => {
     let arr = [...array];
@@ -70,20 +71,20 @@ function App() {
     setIndex(i)
   };
 
-const handleUpdate = () => {
-  let updatedArr = array.map((itm, idx) => {
-    if (idx === index) {
-      return {
-        ...itm,
-        "LOCATION A STOCK": LocA,
-        "LOC B STOCK ": LocB,
-      };
-    }
-    return itm;
-  });
-  setArray(updatedArr);
-  setDialogueBox(false);
-};
+  const handleUpdate = () => {
+    let updatedArr = array.map((itm, idx) => {
+      if (idx === index) {
+        return {
+          ...itm,
+          "LOCATION A STOCK": LocA,
+          "LOC B STOCK ": LocB,
+        };
+      }
+      return itm;
+    });
+    setArray(updatedArr);
+    setDialogueBox(false);
+  };
   // console.log(LocA,"hey",LocB)
   return (
     <div className="app__table">
@@ -108,7 +109,12 @@ const handleUpdate = () => {
         <label>User Input:</label>
         <input
           value={inputdata}
-          onChange={(e) => setInputdata(e.target.value)}
+          onChange={(e) => { 
+          if(!e.target.value) {
+            setArray(originalArray)
+          } 
+          setInputdata(e.target.value)
+          }}
         />
         <button onClick={HandleFilter}>Filter</button>
       </div>
@@ -126,47 +132,35 @@ const handleUpdate = () => {
         <tbody className="table__body">
           {array.map((item, idx) => (
             <>
-            <tr key={idx}>
-              {Object.values(item).map((val) => (
-                <td className="table__data">{val}</td>
-              ))}
-              <button onClick={() => handleDel(idx)}>Del</button>
-              <button onClick={() => handleEdit(idx)}>Edit</button>
-            </tr>
-            <div>
-            {dialogueBox && (
-        <div className="open__state">
-          <p className="open__desc">LocA_Stock and LocB_Stock Can be Updated</p>
-          <div className="open__form">
-            <label>LocA_Stock</label>
-            <input className="open__input"
-             value={LocA} onChange={(e)=>setLocA(e.target.value)} />
-            <label>LocB_Stock</label>
-            <input className="open__input"
-             value={LocB} onChange={(e)=>setLocB(e.target.value)} />
-             <button className="open__update" onClick={()=>handleUpdate()}>Update</button>
-          </div>
-        </div>
-      )}
-            </div>
+              <tr key={idx}>
+                {Object.values(item).map((val) => (
+                  <td className="table__data">{val}</td>
+                ))}
+                <button onClick={() => handleDel(idx)}>Del</button>
+                <button onClick={() => handleEdit(idx)}>Edit</button>
+              </tr>
+              <div>
+                {dialogueBox && (
+                  <div className="open__state">
+                    <p className="open__desc">LocA_Stock and LocB_Stock Can be Updated</p>
+                    <div className="close__tab">
+                      <span onClick={()=>setDialogueBox(!dialogueBox)}>X</span></div>
+                    <div className="open__form">
+                      <label>LocA_Stock</label>
+                      <input className="open__input"
+                        value={LocA} onChange={(e) => setLocA(e.target.value)} />
+                      <label>LocB_Stock</label>
+                      <input className="open__input"
+                        value={LocB} onChange={(e) => setLocB(e.target.value)} />
+                      <button className="open__update" onClick={() => handleUpdate()}>Update</button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           ))}
         </tbody>
       </table>
-      {/* {dialogueBox && (
-        <div className="open__state">
-          <p className="open__desc">LocA_Stock and LocB_Stock Can be Updated</p>
-          <div className="open__form">
-            <label>LocA_Stock</label>
-            <input className="open__input"
-             value={LocA} onChange={(e)=>setLocA(e.target.value)} />
-            <label>LocB_Stock</label>
-            <input className="open__input"
-             value={LocB} onChange={(e)=>setLocB(e.target.value)} />
-             <button className="open__update" onClick={()=>handleUpdate()}>Update</button>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
