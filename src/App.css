@@ -1,38 +1,68 @@
-.App {
+.app__table{
+  padding-left: 11px;
+}
+
+.table{
+  border: 1px solid black;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* .table__header{
+  border: 1px solid black !important;
+  border-collapse: collapse !important;
+} */
+
+th{
+  border: 1px solid black !important;
+  border-collapse: collapse !important;
+}
+
+.table__body{
+  border: 1px solid black;
+  border-collapse: collapse;
+} 
+.table__data{
+  border: 1px solid black;
+  border-collapse: collapse;
+  
+}
+
+.input__fields{
+  display: flex;
+  gap: 8px;
+  position: relative;
+  top: 13px;
+}
+
+
+.table__header{
+  width: max-content;
+  height: 30px;
+
+}
+
+.open__state{
+  position: fixed;
+  width: 429px;
+  height: 376px;
+  border-radius: 28px;
+  background-color: aliceblue;
+  top: 94px;
+  left: 35%;
+}
+
+.open__desc{
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.open__form{
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 33px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.open__update{
+margin-top: 12px;
 }
