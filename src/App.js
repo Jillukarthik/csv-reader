@@ -1,5 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./App.css";
+import {
+  Button,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableHead,
+  TableCell,
+  TableBody,
+  Box,
+  Input,
+  FormLabel,
+  Stack,
+  Typography,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+
 function App() {
   const [file, setFile] = useState();
   const [array, setArray] = useState([]);
@@ -9,15 +29,14 @@ function App() {
   const [LocA, setLocA] = useState("");
   const [LocB, setLocB] = useState("");
   const [index, setIndex] = useState();
-  const fileReader = new FileReader();
 
-
+  const fileReader = useMemo(() => new FileReader(), []);
 
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const csvFileToArray = (string) => {
+  const csvFileToArray = useMemo(() => (string) => {
     const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
     const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
 
@@ -31,8 +50,8 @@ function App() {
     });
 
     setArray(array);
-    setOriginalArray(array)
-  };
+    setOriginalArray(array);
+  }, []);
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -47,31 +66,34 @@ function App() {
     }
   };
 
-  const headerKeys = Object.keys(Object.assign({}, ...array));
+  const headerKeys = useMemo(() => Object.keys(Object.assign({}, ...array)), [
+    array,
+  ]);
 
   const HandleFilter = () => {
-      let filteredData = array.filter((itm, idx) => {
-        return (
-          itm["Part #"]?.includes(inputdata.toUpperCase()) ||
-          itm["Alt.Part#"]?.includes(inputdata.toUpperCase())
-        );
-      });
-    setArray(filteredData); 
+    let filteredData = array.filter((itm) => {
+      return (
+        itm["Part #"]?.includes(inputdata.toUpperCase()) ||
+        itm["Alt.Part#"]?.includes(inputdata.toUpperCase())
+      );
+    });
+    setArray(filteredData);
   };
 
-
-  const handleDel = (i) => {
+  const handleDel = useMemo(() => (i) => {
     let arr = [...array];
     arr.splice(i, 1);
     setArray(arr);
-  };
+  }, [array]);
 
-  const handleEdit = (i) => {
+  const handleEdit = useMemo(() => (i,itm) => {
     setDialogueBox(true);
-    setIndex(i)
-  };
+    setIndex(i);
+    setLocA(itm["LOCATION A STOCK"])
+    setLocB(itm["LOC B STOCK "])
+  }, []);
 
-  const handleUpdate = () => {
+  const handleUpdate = useMemo(() => () => {
     let updatedArr = array.map((itm, idx) => {
       if (idx === index) {
         return {
@@ -84,84 +106,150 @@ function App() {
     });
     setArray(updatedArr);
     setDialogueBox(false);
-  };
-  // console.log(LocA,"hey",LocB)
+  }, [array, index, LocA, LocB]);
+
+   const handleRender = useMemo(() => (e) => {
+    if (!e.target.value) {
+      setArray(originalArray);
+      console.log("data,", e.target.value);
+    }
+    console.log("data,", e.target.value);
+  }, [originalArray]);
+
+  const handleInputChange = useMemo(() => (e) => {
+    setInputdata(e.target.value);
+    handleRender(e);
+  }, [handleRender]);
+
+ 
+
   return (
-    <div className="app__table">
-      <h1>CSV Table Data</h1>
-      <form>
-        <input
+    <Box className="app__table">
+      <Typography component="h1">CSV Table Data</Typography>
+      <Box>
+        <Input
           type={"file"}
           id={"csvFileInput"}
           accept={".csv"}
           onChange={handleOnChange}
         />
-
-        <button
+        <Button
+          variant="outlined"
+          className="btn--import__csv"
+          startIcon={<GetAppIcon />}
           onClick={(e) => {
             handleOnSubmit(e);
           }}
         >
           IMPORT CSV
-        </button>
-      </form>
-      <div className="input__fields">
-        <label>User Input:</label>
-        <input
+        </Button>
+      </Box>
+      <Box className="input__fields">
+        <FormLabel>User Input:</FormLabel>
+        <Input
           value={inputdata}
-          onChange={(e) => { 
-          if(!e.target.value) {
-            setArray(originalArray)
-          } 
-          setInputdata(e.target.value)
-          }}
+          onChange={(e) => handleInputChange(e)}
         />
-        <button onClick={HandleFilter}>Filter</button>
-      </div>
-      <br />
+        <Button
+          variant="outlined"
+          className="btn--filter__csv"
+          startIcon={<FilterAltIcon />}
+          onClick={() => HandleFilter()}
+        >
+          Filter
+        </Button>
+      </Box>
 
-      <table className="table">
-        <thead className="table__header">
-          <tr key={"header"}>
-            {headerKeys.map((key) => (
-              <th key={key}>{key}</th>
+      <TableContainer className="table__csv" component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow key={"header"}>
+              {headerKeys.map((key) => (
+                <TableCell className="table__header" key={key}>
+                  {key}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {array.map((item, idx) => (
+              <>
+                <TableRow key={item}>
+                  {Object.values(item).map((val) => (
+                    <TableCell align="left">{val}</TableCell>
+                  ))}
+                  <Box>
+                    <Stack
+                      direction="column"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      height="inherit"
+                    >
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={() => handleDel(idx)}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleEdit(idx,item)}
+                      >
+                        <BorderColorIcon fontSize="small" />
+                      </Button>
+                    </Stack>
+                  </Box>
+                </TableRow>
+                <Box>
+                  {dialogueBox && (
+                    <Box className="open__state">
+                      <Typography component="p" className="open__desc">
+                        LocA_Stock and LocB_Stock Can be Updated
+                      </Typography>
+                      <Box className="close__tab">
+                        <Typography component="span"
+                          onClick={() => setDialogueBox(!dialogueBox)}
+                          className="close__opendialogue"
+                          color="red"
+                        >
+                          X
+                        </Typography>
+                      </Box>
+                      <Box className="open__form">
+                        <Input
+                          className="open__input"
+                          placeholder="Loc A"
+                          value={LocA}
+                          onChange={(e) => setLocA(e.target.value)}
+                        />
+
+                        <Input
+                          className="open__input"
+                          placeholder="Loc B"
+                          value={LocB}
+                          onChange={(e) => setLocB(e.target.value)}
+                        />
+                        <Button
+                          color="primary"
+                          variant="outlined"
+                          className="btn--open__update"
+                          onClick={() => handleUpdate()}
+                        >
+                          Update
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              </>
             ))}
-          </tr>
-        </thead>
-
-        <tbody className="table__body">
-          {array.map((item, idx) => (
-            <>
-              <tr key={idx}>
-                {Object.values(item).map((val) => (
-                  <td className="table__data">{val}</td>
-                ))}
-                <button onClick={() => handleDel(idx)}>Del</button>
-                <button onClick={() => handleEdit(idx)}>Edit</button>
-              </tr>
-              <div>
-                {dialogueBox && (
-                  <div className="open__state">
-                    <p className="open__desc">LocA_Stock and LocB_Stock Can be Updated</p>
-                    <div className="close__tab">
-                      <span onClick={()=>setDialogueBox(!dialogueBox)}>X</span></div>
-                    <div className="open__form">
-                      <label>LocA_Stock</label>
-                      <input className="open__input"
-                        value={LocA} onChange={(e) => setLocA(e.target.value)} />
-                      <label>LocB_Stock</label>
-                      <input className="open__input"
-                        value={LocB} onChange={(e) => setLocB(e.target.value)} />
-                      <button className="open__update" onClick={() => handleUpdate()}>Update</button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
+
 export default App;

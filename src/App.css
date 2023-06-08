@@ -1,39 +1,26 @@
 .app__table{
   padding-left: 11px;
+  z-index: 900 !important;
+  overflow-x: hidden !important;
+  padding-left: 17px;
+  padding-bottom: 36px;
 }
 
-.table{
-  border: 1px solid black;
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+.btn--import__csv{
+  margin-left: 12px !important;
 }
 
-/* .table__header{
-  border: 1px solid black !important;
-  border-collapse: collapse !important;
-} */
-
-th{
-  border: 1px solid black !important;
-  border-collapse: collapse !important;
-}
-
-.table__body{
-  border: 1px solid black;
-  border-collapse: collapse;
-} 
-.table__data{
-  border: 1px solid black;
-  border-collapse: collapse;
-  
+.table__csv{
+  padding-left:25px !important;
+  margin-top: 22px !important;
 }
 
 .input__fields{
   display: flex;
+  align-items: center;
   gap: 8px;
   position: relative;
-  top: 13px;
+  top: 16px;
 }
 
 
@@ -43,15 +30,20 @@ th{
 
 }
 
+
+
 .open__state{
   position: fixed;
   width: 429px;
   height: 273px;
   border-radius: 28px;
-  background-color: #e2e2e2;
+  background-color: #ffffff;
   top: 209px;
   left: 35%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
+
+
 
 .open__desc{
   text-align: center;
@@ -60,6 +52,7 @@ th{
   font-size: 17px;
   font-weight: 700;
 }
+
 .open__form{
   display: flex;
     flex-direction: column;
@@ -67,8 +60,13 @@ th{
     padding-top: 33px;
 }
 
-.open__update{
-margin-top: 12px;
+.open__input{
+  padding-top: 8px;
+}
+
+.btn--open__update{
+  position: relative;
+  top: 24px !important;
 }
 
 .close__tab{
@@ -77,4 +75,61 @@ margin-top: 12px;
   left: 401px;
   bottom: 47px;
   cursor: pointer;
+}
+
+.css-1ex1afd-MuiTableCell-root {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left !important;
+  padding: 12px !important;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.table__header{
+  font-size: 14px !important;
+  font-weight: 800 !important;
+}
+
+.MuiTableRow-root{
+  width: 100% !important;
+}
+.css-1ygcj2i-MuiTableCell-root{
+  font-weight: 800 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left !important;
+  padding: 12px !important;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+
+
+.close__opendialogue{
+  color: red !important;
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  position: relative !important;
+  top: 29px;
+}
+
+
+
+.css-1051awe-MuiStack-root{
+  height: 126px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+  position: relative;
+  left: -34px;
 }
